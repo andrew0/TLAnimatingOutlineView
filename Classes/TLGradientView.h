@@ -54,15 +54,15 @@ typedef NSUInteger TLGradientViewFillOption;
 	NSColor *_borderColor;
 	TLRectEdge _borderSidesMask;
 }
-@property(readwrite,copy) NSGradient *activeFillGradient;
-@property(readwrite,copy) NSGradient *inactiveFillGradient;
-@property(readwrite,copy) NSGradient *clickedFillGradient;
-@property(readwrite,assign) TLGradientViewFillOption fillOption;
-@property(readwrite,assign) CGFloat fillAngle;
-@property(readwrite,assign) BOOL drawsHighlight;
-@property(readwrite,copy) NSColor *highlightColor;
-@property(readwrite,copy) NSColor *clickedHighlightColor;
-@property(readwrite,assign) BOOL drawsBorder;
-@property(readwrite,copy) NSColor *borderColor;
-@property(readwrite,assign) TLRectEdge borderSidesMask;
+@property(nonatomic,readwrite,copy) NSGradient *activeFillGradient;
+@property(nonatomic,readwrite,copy) NSGradient *inactiveFillGradient;
+@property(nonatomic,readwrite,copy) NSGradient *clickedFillGradient;
+@property(nonatomic,readwrite,assign) TLGradientViewFillOption fillOption;
+@property(nonatomic,readwrite,assign) CGFloat fillAngle;
+@property(nonatomic,readwrite,assign) BOOL drawsHighlight;
+@property(nonatomic,readwrite,copy) NSColor *highlightColor;
+@property(nonatomic,readwrite,copy) NSColor *clickedHighlightColor;
+@property(nonatomic,readwrite,assign) BOOL drawsBorder;
+@property(nonatomic,readwrite,copy) NSColor *borderColor;
+@property(nonatomic,readwrite,assign) TLRectEdge borderSidesMask;
 @end

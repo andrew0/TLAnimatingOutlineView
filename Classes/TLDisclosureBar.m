@@ -39,10 +39,10 @@
 #define TL_DISCLOSURE_BAR_MINX_PADDING 8.0f
 
 @interface TLDisclosureBar ()
-@property(readwrite,retain) NSButton *disclosureButton;
-@property(readwrite,retain) NSImageView *imageViewLeft;
-@property(readwrite,retain) NSTextField *labelField;
-//@property(readwrite,retain) NSView *accessoryView;
+@property(nonatomic,readwrite,retain) NSButton *disclosureButton;
+@property(nonatomic,readwrite,retain) NSImageView *imageViewLeft;
+@property(nonatomic,readwrite,retain) NSTextField *labelField;
+//@property(nonatomic,readwrite,retain) NSView *accessoryView;
 @end
 
 @interface TLDisclosureBar (Private)

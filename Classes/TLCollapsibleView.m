@@ -40,10 +40,14 @@ NSString *TLCollapsibleViewAnimationTypeKey = @"TLCollapsibleViewAnimationTypeKe
 NSString *TLCollapsibleViewAnimationInfoKey = @"TLCollapsibleViewAnimationInfoKey";
 NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetailViewAnimationInfoKey";
 
+@interface NSView (KeysForCoding)
+- (NSArray *)keysForCoding;
+@end
+
 @interface TLCollapsibleView ()
-@property(readwrite,retain) TLDisclosureBar *disclosureBar;
-@property(readwrite,retain) NSViewAnimation *expandAnimation;
-@property(readwrite,retain) NSViewAnimation *collapseAnimation;
+@property(nonatomic,readwrite,retain) TLDisclosureBar *disclosureBar;
+@property(nonatomic,readwrite,retain) NSViewAnimation *expandAnimation;
+@property(nonatomic,readwrite,retain) NSViewAnimation *collapseAnimation;
 @end
 
 @interface TLCollapsibleView (Private)
@@ -132,7 +136,7 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
 	[self setAutoresizingMask:NSViewWidthSizable];
 	
 	NSRect disclosureBarFrame = frame;
-	disclosureBarFrame.size.height = 21.0f;
+	disclosureBarFrame.size.height = 25.0f;
 	disclosureBarFrame.origin.y = 0.0f;
 	self.disclosureBar = [[[TLDisclosureBar alloc] initWithFrame:disclosureBarFrame expanded:expanded] autorelease];
 	
@@ -159,7 +163,9 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
 {
 	NSArray *keys = [NSArray arrayWithObjects:nil];
 	if ([[[self class] superclass] instancesRespondToSelector:@selector(keysForCoding)])
-		keys = [[(id)super keysForCoding] arrayByAddingObjectsFromArray:keys];
+    {
+		keys = [[super keysForCoding] arrayByAddingObjectsFromArray:keys];
+    }
 	return keys;
 }
 

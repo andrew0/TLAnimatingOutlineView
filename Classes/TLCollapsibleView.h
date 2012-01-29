@@ -40,7 +40,7 @@ typedef NSUInteger TLCollapsibleViewAnimationType;
 
 @protocol TLCollapsibleDetailView;
 @class TLDisclosureBar;
-@interface TLCollapsibleView : NSView <NSCoding> {
+@interface TLCollapsibleView : NSView <NSCoding, NSAnimationDelegate> {
 @private
 	TLDisclosureBar *_disclosureBar;
 	NSView <TLCollapsibleDetailView> *_detailView;
@@ -50,11 +50,11 @@ typedef NSUInteger TLCollapsibleViewAnimationType;
 	NSViewAnimation *_expandAnimation;
 	NSViewAnimation *_collapseAnimation;
 }
-@property(readonly,retain) TLDisclosureBar *disclosureBar;
-@property(readwrite,retain) NSView <TLCollapsibleDetailView> *detailView;
-@property(readonly) BOOL expanded;
-@property(readwrite,assign) BOOL animating;
-@property(readwrite,assign) BOOL hasDisclosureButton;
+@property(nonatomic,readonly,retain) TLDisclosureBar *disclosureBar;
+@property(nonatomic,readwrite,retain) NSView <TLCollapsibleDetailView> *detailView;
+@property(nonatomic,readonly) BOOL expanded;
+@property(nonatomic,readwrite,assign) BOOL animating;
+@property(nonatomic,readwrite,assign) BOOL hasDisclosureButton;
 
 // the following two dictionaries contain entries for the keys below.
 extern NSString *TLCollapsibleViewAnimationTypeKey; // an NSNumber TLCollapsibleViewAnimationType
@@ -62,8 +62,8 @@ extern NSString *TLCollapsibleViewAnimationInfoKey; // an NSDictionary the anima
 extern NSString *TLCollapsibleViewDetailViewAnimationInfoKey; // an NSDictionary the animation info for the detailView
 
 // on calling -expandAnimationInfo and -collapseAnimationInfo, the detail view will receive a -canCollapse or canExpand message if the optional methods of the TLCollapsibleDetailView protocol are implemented. If these return NO, then -expandAnimationInfo and -collapseAnimationInfo return nil;
-@property(readonly) NSDictionary *expandAnimationInfo;
-@property(readonly) NSDictionary *collapseAnimationInfo;
+@property(nonatomic,readonly) NSDictionary *expandAnimationInfo;
+@property(nonatomic,readonly) NSDictionary *collapseAnimationInfo;
 
 - (id)initWithFrame:(NSRect)frame detailView:(NSView <TLCollapsibleDetailView> *)detailView expanded:(BOOL)expanded;
 - (void)expand;

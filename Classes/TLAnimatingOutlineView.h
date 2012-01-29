@@ -34,7 +34,7 @@
 
 @protocol TLAnimatingOutlineViewDelegate;
 @class TLCollapsibleView;
-@interface TLAnimatingOutlineView : NSView <NSCoding> {
+@interface TLAnimatingOutlineView : NSView <NSCoding, NSAnimationDelegate> {
 @private
 	id <TLAnimatingOutlineViewDelegate> _delegate;
 	BOOL _animating;
@@ -44,11 +44,11 @@
 	NSViewAnimation *_collapseAnimation;
 	BOOL _allowsSingleSubviewExpansion;
 }
-@property(readwrite,assign) id <TLAnimatingOutlineViewDelegate> delegate;
-@property(readonly) BOOL animating;
+@property(nonatomic,readwrite,assign) id <TLAnimatingOutlineViewDelegate> delegate;
+@property(nonatomic,readonly) BOOL animating;
 
 // WARNING: not yet implemented
-@property(readwrite,assign) BOOL allowsSingleSubviewExpansion; // Forces other expanded subviews to collapse when one is opened. The behaviour of this when set to YES while multiple views are expanded is to come into effect when a subview is expanded.
+@property(nonatomic,readwrite,assign) BOOL allowsSingleSubviewExpansion; // Forces other expanded subviews to collapse when one is opened. The behaviour of this when set to YES while multiple views are expanded is to come into effect when a subview is expanded.
 
 // all methods taking an NSViewController as a parameter set the label of the row to the title of the view controller
 - (TLCollapsibleView *)addViewWithViewController:(NSViewController *)viewController image:(NSImage *)image expanded:(BOOL)expanded animate:(BOOL)animate;
@@ -86,7 +86,7 @@
 
 @end
 
-@protocol TLAnimatingOutlineViewDelegate
+@protocol TLAnimatingOutlineViewDelegate <NSObject>
 @required
 - (CGFloat)rowSeparation;
 @optional

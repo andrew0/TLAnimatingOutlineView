@@ -42,11 +42,11 @@ NSString *TLAnimatingOutlineViewItemWillCollapseNotification = @"TLAnimatingOutl
 NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutlineViewItemDidCollapseNotification";
 
 @interface TLAnimatingOutlineView ()
-@property(readwrite,assign) BOOL animating;
-@property(readwrite,copy) NSViewAnimation *insertionAnimation;
-@property(readwrite,copy) NSViewAnimation *removalAnimation;
-@property(readwrite,copy) NSViewAnimation *expandAnimation;
-@property(readwrite,copy) NSViewAnimation *collapseAnimation;
+@property(nonatomic,readwrite,assign) BOOL animating;
+@property(nonatomic,readwrite,copy) NSViewAnimation *insertionAnimation;
+@property(nonatomic,readwrite,copy) NSViewAnimation *removalAnimation;
+@property(nonatomic,readwrite,copy) NSViewAnimation *expandAnimation;
+@property(nonatomic,readwrite,copy) NSViewAnimation *collapseAnimation;
 @end
 
 @interface TLAnimatingOutlineView (Private)
@@ -74,7 +74,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 		[[[[self subviews] objectAtIndex:0] disclosureBar] setBorderSidesMask:TLMinYEdge];
 	
 	NSUInteger index = 1;
-	for (index ; index < [[self subviews] count] ; index ++) {
+	for ( ; index < [[self subviews] count] ; index ++) {
 		TLCollapsibleView *subview = [[self subviews] objectAtIndex:index];
 		TLCollapsibleView *precedingView = [[self subviews] objectAtIndex:index - 1];
 		[[subview disclosureBar] setBorderSidesMask:precedingView.expanded ? (TLMinYEdge|TLMaxYEdge) : ([[subview disclosureBar] isFlipped] ? TLMaxYEdge : TLMinYEdge)];
@@ -110,7 +110,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 	NSMutableArray *animationsForOtherSubviews = [NSMutableArray array];
 	NSRect newPrecedingViewFrame = targetFrame;
 	NSUInteger index = [[self subviews] indexOfObject:animatedSubview] + 1;
-	for (index ; index < [[self subviews] count] ; index++) {
+	for ( ; index < [[self subviews] count] ; index++) {
 		NSView *subview = [[self subviews] objectAtIndex:index];
 		NSRect newSubviewFrame = [subview frame];
 		newSubviewFrame.origin.y = NSMaxY(newPrecedingViewFrame) + [self.delegate rowSeparation];
@@ -282,7 +282,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 	return [self addViewWithViewController:viewController image:nil expanded:YES animate:NO];
 }
 
-- (TLCollapsibleView *)addView:(NSView *)detailView withImage:(NSImage *)image label:(NSString *)label expanded:(BOOL)expanded animate:(BOOL)animate;
+- (TLCollapsibleView *)addView:(NSView<TLCollapsibleDetailView> *)detailView withImage:(NSImage *)image label:(NSString *)label expanded:(BOOL)expanded animate:(BOOL)animate;
 {
 	NSRect collapsibleViewFrame = [self frame];
 	collapsibleViewFrame.size.height = NSHeight([detailView frame]); // the initialiser of TLCollapsibleView reserves the right to increase the height of the view to include the disclosure bar frame
@@ -326,7 +326,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 	return [self addView:detailView withImage:nil label:nil expanded:YES];
 }
 
-- (TLCollapsibleView *)insertView:(NSView *)detailView atRow:(NSUInteger)row withImage:(NSImage *)image label:(NSString *)label expanded:(BOOL)expanded animate:(BOOL)animate;
+- (TLCollapsibleView *)insertView:(NSView<TLCollapsibleDetailView> *)detailView atRow:(NSUInteger)row withImage:(NSImage *)image label:(NSString *)label expanded:(BOOL)expanded animate:(BOOL)animate;
 {
 	if (!detailView)
 		return nil;
@@ -404,8 +404,6 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 {
 	if (row >= [[self subviews] count])
 		return;
-	if (row < 0)
-		return;
 	
 	[self removeItem:[self itemAtRow:row] animate:animate];	
 }
@@ -426,7 +424,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 		return;
 	
 	BOOL shouldExpand = NO;	
-	if (![(id)self.delegate respondsToSelector:@selector(outlineView:shouldExpandItem:)])
+	if (![self.delegate respondsToSelector:@selector(outlineView:shouldExpandItem:)])
 		shouldExpand = YES;
 	else
 		shouldExpand = [self.delegate outlineView:self shouldExpandItem:item];
@@ -451,7 +449,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 		return;
 	
 	BOOL shouldCollapse = NO;
-	if (![(id)self.delegate respondsToSelector:@selector(outlineView:shouldCollapseItem:)])
+	if (![self.delegate respondsToSelector:@selector(outlineView:shouldCollapseItem:)])
 		shouldCollapse = YES;
 	else
 		shouldCollapse = [self.delegate outlineView:self shouldCollapseItem:item];
@@ -479,16 +477,12 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 {
 	if (row >= [[self subviews] count])
 		return;
-	if (row < 0)
-		return;
 	[self expandItem:[self itemAtRow:row]];
 }
 
 - (void)collapseItemAtRow:(NSUInteger)row;
 {
 	if (row >= [[self subviews] count])
-		return;
-	if (row < 0)
 		return;
 	[self collapseItem:[self itemAtRow:row]];
 }
@@ -497,16 +491,12 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 {
 	if (row >= [[self subviews] count])
 		return nil;
-	if (row < 0)
-		return nil;
 	return [[self subviews] objectAtIndex:row];
 }
 
 - (NSView *)detailViewAtRow:(NSUInteger)row;
 {
 	if (row >= [[self subviews] count])
-		return nil;
-	if (row < 0)
 		return nil;
 	return [[self itemAtRow:row] detailView];
 }
@@ -543,7 +533,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 		NSMutableArray *subviews = [self mutableArrayValueForKey:@"subviews"];
 		[subviews removeObjectIdenticalTo:animatedSubview];
 	} else {
-		if ([(id)self.delegate respondsToSelector:animatedSubview.expanded ? @selector(outlineViewItemDidExpand:) : @selector(outlineViewItemDidCollapse:)])
+		if ([self.delegate respondsToSelector:animatedSubview.expanded ? @selector(outlineViewItemDidExpand:) : @selector(outlineViewItemDidCollapse:)])
 			animatedSubview.expanded ? [self _postDidExpandNotificationWithItem:animatedSubview] : [self _postDidCollapseNotificationWithItem:animatedSubview];
 		if ([animatedSubview.detailView respondsToSelector:animatedSubview.expanded ? @selector(viewDidExpand) : @selector(viewDidExpand)])
 			animatedSubview.expanded ? [animatedSubview.detailView viewDidExpand] : [animatedSubview.detailView viewDidCollapse];

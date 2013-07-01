@@ -44,15 +44,15 @@
 	[outlineView setAutoresizingMask:NSViewWidthSizable]; // should not be combined with NSviewHieghtSizable else we have incorrect scrollbar showing/hiding/sizing behaviour.
 	[_scrollView setDocumentView:outlineView];
 	
-	id view = [outlineView addView:_detailView1 withImage:[NSImage imageNamed:NSImageNameQuickLookTemplate] label:[NSString stringWithString:@"First View"]  expanded:YES];
+	id view = [outlineView addView:_detailView1 withImage:[NSImage imageNamed:NSImageNameQuickLookTemplate] label:@"First View"  expanded:YES];
 //	TLGradientView *accessoryView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0, 40, 18)] autorelease];
 //	[[view disclosureBar] setAccessoryView:accessoryView];
 	
-	view = [outlineView addView:_detailView2 withImage:[NSImage imageNamed:NSImageNameInfo] label:[NSString stringWithString:@"Next View"]  expanded:YES];
+	view = [outlineView addView:_detailView2 withImage:[NSImage imageNamed:NSImageNameInfo] label:@"Next View"  expanded:YES];
 	
-	view = [outlineView addView:_detailView3 withImage:[NSImage imageNamed:NSImageNameNetwork] label:[NSString stringWithString:@"And again"]  expanded:NO];
+	view = [outlineView addView:_detailView3 withImage:[NSImage imageNamed:NSImageNameNetwork] label:@"And again"  expanded:NO];
 	
-	view = [outlineView addView:_detailView4 withImage:[NSImage imageNamed:NSImageNamePreferencesGeneral] label:[NSString stringWithString:@"Yet another"]  expanded:NO];
+	view = [outlineView addView:_detailView4 withImage:[NSImage imageNamed:NSImageNamePreferencesGeneral] label:@"Yet another"  expanded:NO];
 	
 //	[self performSelector:@selector(insertionTest) withObject:nil afterDelay:4.0f];
 }

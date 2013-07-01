@@ -422,11 +422,23 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
     NSDictionary *animationInfo = [item collapseAnimationInfo];
     if(!animationInfo) // the TLCollapsibleView will also ask the detail view if it can expand/collapse.
         return;
-
+    
     [self _postWillCollapseNotificationWithItem:item];    
     if ([[item detailView] respondsToSelector:@selector(viewWillCollapse)])
         [[item detailView] viewWillCollapse];
-
+    
+    // if the first responder is being collapsed, remove its focus
+    // otherwise the focus ring will still show while the view is being collapsed
+    NSResponder *firstResponder = [[self window] firstResponder];
+    if ([firstResponder isKindOfClass:[NSView class]]) {
+        for (NSView *sv = [(NSView *)firstResponder superview]; sv != nil; sv = [sv superview]) {
+            if (sv == [item detailView]) {
+                [[self window] makeFirstResponder:nil];
+                break;
+            }
+        }
+    }
+    
     [self _animateSubviewsWithAnimationInfo:animationInfo];
 }
 

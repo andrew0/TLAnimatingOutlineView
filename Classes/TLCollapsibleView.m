@@ -80,7 +80,7 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
     newViewFrame.size.height = NSHeight([self.disclosureBar frame]) + NSHeight([self.detailView frame]);
     NSDictionary *viewAnimationInfo = [NSDictionary dictionaryWithObjectsAndKeys:self,NSViewAnimationTargetKey,[NSValue valueWithRect:[self frame]],NSViewAnimationStartFrameKey,[NSValue valueWithRect:newViewFrame],NSViewAnimationEndFrameKey,nil];
     
-    return [NSDictionary dictionaryWithObjectsAndKeys:detailViewAnimationInfo,TLCollapsibleViewDetailViewAnimationInfoKey,viewAnimationInfo,TLCollapsibleViewAnimationInfoKey,[NSNumber numberWithUnsignedInt:TLCollapsibleViewExpansionAnimation],TLCollapsibleViewAnimationTypeKey,nil];    
+    return [NSDictionary dictionaryWithObjectsAndKeys:detailViewAnimationInfo,TLCollapsibleViewDetailViewAnimationInfoKey,viewAnimationInfo,TLCollapsibleViewAnimationInfoKey,[NSNumber numberWithInteger:TLCollapsibleViewExpansionAnimation],TLCollapsibleViewAnimationTypeKey,nil];
 }
 
 - (NSDictionary *)_collapseAnimationInfo {
@@ -92,7 +92,7 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
     newViewFrame.size.height = NSHeight([self.disclosureBar frame]);
     NSDictionary *viewAnimationInfo = [NSDictionary dictionaryWithObjectsAndKeys:self,NSViewAnimationTargetKey,[NSValue valueWithRect:[self frame]],NSViewAnimationStartFrameKey,[NSValue valueWithRect:newViewFrame],NSViewAnimationEndFrameKey,nil];
     
-    return [NSDictionary dictionaryWithObjectsAndKeys:detailViewAnimationInfo,TLCollapsibleViewDetailViewAnimationInfoKey,viewAnimationInfo,TLCollapsibleViewAnimationInfoKey,[NSNumber numberWithUnsignedInt:TLCollapsibleViewCollapseAnimation],TLCollapsibleViewAnimationTypeKey,nil];
+    return [NSDictionary dictionaryWithObjectsAndKeys:detailViewAnimationInfo,TLCollapsibleViewDetailViewAnimationInfoKey,viewAnimationInfo,TLCollapsibleViewAnimationInfoKey,[NSNumber numberWithInteger:TLCollapsibleViewCollapseAnimation],TLCollapsibleViewAnimationTypeKey,nil];
 }
 
 - (void)_detailViewFrameDidChange:(NSNotification *)notification {

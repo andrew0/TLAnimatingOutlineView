@@ -58,24 +58,21 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
 @end
 
 @implementation TLCollapsibleView (Private)
-- (void)_expand;
-{
+- (void)_expand {
     if ([[self superview] isKindOfClass:[TLAnimatingOutlineView class]] && [[TLAnimatingOutlineView class] instancesRespondToSelector:@selector(expandItem:)])
         [(TLAnimatingOutlineView *)[self superview] expandItem:self];
     else
         [self expand];
 }
 
-- (void)_collapse;
-{
+- (void)_collapse {
     if ([[self superview] isKindOfClass:[TLAnimatingOutlineView class]] && [[TLAnimatingOutlineView class] instancesRespondToSelector:@selector(expandItem:)])
         [(TLAnimatingOutlineView *)[self superview] collapseItem:self];
     else
         [self collapse];
 }
 
-- (NSDictionary *)_expandAnimationInfo;
-{
+- (NSDictionary *)_expandAnimationInfo {
     NSRect newDetailViewFrame = [self.detailView frame];
     newDetailViewFrame.origin.y = NSMaxY([self.disclosureBar frame]);
     NSDictionary *detailViewAnimationInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.detailView,NSViewAnimationTargetKey,[NSValue valueWithRect:[self.detailView frame]],NSViewAnimationStartFrameKey,[NSValue valueWithRect:newDetailViewFrame],NSViewAnimationEndFrameKey,nil];
@@ -87,8 +84,7 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
     return [NSDictionary dictionaryWithObjectsAndKeys:detailViewAnimationInfo,TLCollapsibleViewDetailViewAnimationInfoKey,viewAnimationInfo,TLCollapsibleViewAnimationInfoKey,[NSNumber numberWithUnsignedInt:TLCollapsibleViewExpansionAnimation],TLCollapsibleViewAnimationTypeKey,nil];    
 }
 
-- (NSDictionary *)_collapseAnimationInfo;
-{
+- (NSDictionary *)_collapseAnimationInfo {
     NSRect newDetailViewFrame = [self.detailView frame];
     newDetailViewFrame.origin.y = NSMaxY([self.disclosureBar frame]) - NSHeight([self.detailView frame]);
     NSDictionary *detailViewAnimationInfo = [NSDictionary dictionaryWithObjectsAndKeys:self.detailView,NSViewAnimationTargetKey,[NSValue valueWithRect:[self.detailView frame]],NSViewAnimationStartFrameKey,[NSValue valueWithRect:newDetailViewFrame],NSViewAnimationEndFrameKey,nil];
@@ -100,8 +96,7 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
     return [NSDictionary dictionaryWithObjectsAndKeys:detailViewAnimationInfo,TLCollapsibleViewDetailViewAnimationInfoKey,viewAnimationInfo,TLCollapsibleViewAnimationInfoKey,[NSNumber numberWithUnsignedInt:TLCollapsibleViewCollapseAnimation],TLCollapsibleViewAnimationTypeKey,nil];
 }
 
-- (void)_detailViewFrameDidChange:(NSNotification *)notification;
-{
+- (void)_detailViewFrameDidChange:(NSNotification *)notification {
     // if we're expanded and the height of the detail view has been increased or decreased then we need to alter our frame to fit
     if (self.expanded && (NSHeight([self frame]) != NSHeight([self.disclosureBar frame]) + NSHeight([self.detailView frame]))) {
         NSRect newFrame = [self frame];
@@ -122,71 +117,67 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
 @synthesize collapseAnimation = _collapseAnimation;
 @dynamic hasDisclosureButton;
 
-- (id)initWithFrame:(NSRect)frame;
-{
+- (id)initWithFrame:(NSRect)frame {
     [NSException raise:NSGenericException format:@"%s is not the designated initialiser for instances of class: %@",__func__,[self className]];
     return nil;
 }
 
-- (id)initWithFrame:(NSRect)frame detailView:(NSView <TLCollapsibleDetailView> *)detailView expanded:(BOOL)expanded;
-{
-    if (![super initWithFrame:frame])
-        return nil;
-    [self setAutoresizesSubviews:YES];
-    [self setAutoresizingMask:NSViewWidthSizable];
+- (id)initWithFrame:(NSRect)frame detailView:(NSView <TLCollapsibleDetailView> *)detailView expanded:(BOOL)expanded {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setAutoresizesSubviews:YES];
+        [self setAutoresizingMask:NSViewWidthSizable];
+
+        NSRect disclosureBarFrame = frame;
+        disclosureBarFrame.size.height = 25.0f;
+        disclosureBarFrame.origin.y = 0.0f;
+        self.disclosureBar = [[[TLDisclosureBar alloc] initWithFrame:disclosureBarFrame expanded:expanded] autorelease];
+
+        NSRect detailViewFrame = [detailView frame];
+        detailViewFrame.size.width = NSWidth(frame);
+        detailViewFrame.origin.y = expanded ? NSMaxY(disclosureBarFrame) : NSMaxY(disclosureBarFrame) - NSHeight(detailViewFrame);
+        [detailView setFrame:detailViewFrame];
+        [detailView setAutoresizingMask:NSViewWidthSizable];
+        self.detailView = detailView;
+
+        frame.size.height = expanded ? NSHeight(disclosureBarFrame) + NSHeight(detailViewFrame) : NSHeight(disclosureBarFrame);
+        [self setFrame:frame];
+
+        [self addSubview:self.detailView];
+        [self addSubview:self.disclosureBar];
+
+        [[self.disclosureBar disclosureButton] setAction:@selector(toggleExpansionState:)];
+        [[self.disclosureBar disclosureButton] setTarget:self];
+    }
     
-    NSRect disclosureBarFrame = frame;
-    disclosureBarFrame.size.height = 25.0f;
-    disclosureBarFrame.origin.y = 0.0f;
-    self.disclosureBar = [[[TLDisclosureBar alloc] initWithFrame:disclosureBarFrame expanded:expanded] autorelease];
-    
-    NSRect detailViewFrame = [detailView frame];
-    detailViewFrame.size.width = NSWidth(frame);
-    detailViewFrame.origin.y = expanded ? NSMaxY(disclosureBarFrame) : NSMaxY(disclosureBarFrame) - NSHeight(detailViewFrame);
-    [detailView setFrame:detailViewFrame];
-    [detailView setAutoresizingMask:NSViewWidthSizable];
-    self.detailView = detailView;
-    
-    frame.size.height = expanded ? NSHeight(disclosureBarFrame) + NSHeight(detailViewFrame) : NSHeight(disclosureBarFrame);
-    [self setFrame:frame];
-    
-    [self addSubview:self.detailView];
-    [self addSubview:self.disclosureBar];
-    
-    [[self.disclosureBar disclosureButton] setAction:@selector(toggleExpansionState:)];
-    [[self.disclosureBar disclosureButton] setTarget:self];
-        
     return self;
 }
 
-- (NSArray *)keysForCoding;
-{
+- (NSArray *)keysForCoding {
     NSArray *keys = [NSArray arrayWithObjects:nil];
     if ([[[self class] superclass] instancesRespondToSelector:@selector(keysForCoding)])
-    {
         keys = [[super keysForCoding] arrayByAddingObjectsFromArray:keys];
-    }
+    
     return keys;
 }
 
-- (id)initWithCoder:(NSCoder *)coder;
-{
-    if (![super initWithCoder:coder])
-        return nil;
-    for (NSString *key in [self keysForCoding])
-        [coder encodeObject:[self valueForKey:key] forKey:key];
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    if (self) {
+        for (NSString *key in [self keysForCoding])
+            [coder encodeObject:[self valueForKey:key] forKey:key];
+    }
+    
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder;
-{
+- (void)encodeWithCoder:(NSCoder *)coder {
     for (NSString *key in [self keysForCoding])
         [self setValue:[coder decodeObjectForKey:key] forKey:key];
     [super encodeWithCoder:coder];
 }
 
-- (void)dealloc;
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_disclosureBar release];
     [_detailView release];
@@ -195,13 +186,11 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
     [super dealloc];
 }
 
-- (BOOL)isFlipped;
-{
+- (BOOL)isFlipped {
     return YES;
 }
 
-- (void)setDetailView:(NSView <TLCollapsibleDetailView> *)detailView;
-{
+- (void)setDetailView:(NSView <TLCollapsibleDetailView> *)detailView {
     if (_detailView == detailView)
         return;
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:_detailView];
@@ -210,28 +199,23 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_detailViewFrameDidChange:) name:NSViewFrameDidChangeNotification object:_detailView];
 }
 
-- (void)setHasDisclosureButton:(BOOL)flag;
-{
+- (void)setHasDisclosureButton:(BOOL)flag {
     [self.disclosureBar setHasDisclosureButton:flag];
 }
 
-- (BOOL)hasDisclosureButton;
-{
+- (BOOL)hasDisclosureButton {
     return [self.disclosureBar hasDisclosureButton];
 }
 
-- (BOOL)expanded;
-{
+- (BOOL)expanded {
     return NSMinY([self.detailView frame]) >= NSMaxY([self.disclosureBar frame]);
 }
 
-- (IBAction)toggleExpansionState:(id)sender;
-{
+- (IBAction)toggleExpansionState:(id)sender {
     self.expanded ? [self _collapse] : [self _expand];
 }
 
-- (void)expand;
-{
+- (void)expand {
     if (self.expanded)
         return;
     
@@ -252,8 +236,7 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
     [self.expandAnimation startAnimation];
 }
 
-- (void)collapse;
-{
+- (void)collapse {
     if (!self.expanded)
         return;
     
@@ -274,8 +257,7 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
     [self.collapseAnimation startAnimation];
 }
 
-- (NSDictionary *)expandAnimationInfo;
-{
+- (NSDictionary *)expandAnimationInfo {
     if (self.expanded)
         return nil;
     
@@ -287,8 +269,7 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
     return [self _expandAnimationInfo];
 }
 
-- (NSDictionary *)collapseAnimationInfo;
-{
+- (NSDictionary *)collapseAnimationInfo {
     if (!self.expanded)
         return nil;
     

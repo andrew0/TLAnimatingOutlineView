@@ -34,9 +34,9 @@
 
 #import "TLCollapsibleView.h"
 
-#define TL_DISCLOSURE_BAR_SUBVIEW_SPACING 6.0f
-#define TL_DISCLOSURE_BAR_TEXT_WIDTH_PADDING 10.0f
-#define TL_DISCLOSURE_BAR_MINX_PADDING 8.0f
+#define TL_DISCLOSURE_BAR_SUBVIEW_SPACING 6.0
+#define TL_DISCLOSURE_BAR_TEXT_WIDTH_PADDING 10.0
+#define TL_DISCLOSURE_BAR_MINX_PADDING 8.0
 
 @interface TLDisclosureBar ()
 @property(nonatomic,readwrite,retain) NSButton *disclosureButton;
@@ -51,8 +51,7 @@
 @end
 
 @implementation TLDisclosureBar (Private)
-- (void)_adjustSubviews;
-{
+- (void)_adjustSubviews {
     NSRect imageViewLeftFrame = [self.imageViewLeft frame];
     imageViewLeftFrame.origin.x = (self.hasDisclosureButton ? NSMaxX([self.disclosureButton frame]) : NSMinX([self frame])) + TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
     [self.imageViewLeft setFrame:imageViewLeftFrame];
@@ -63,8 +62,7 @@
     [self.labelField setFrame:labelFieldFrame];
 }
 
-- (void)_adjustSubviewsFollowingResize;
-{
+- (void)_adjustSubviewsFollowingResize {
     NSSize labelSize = [[self.labelField stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:[[self.labelField cell] controlSize]]],NSFontAttributeName,nil]];
     CGFloat limitingXCoordinate = self.accessoryView ? NSMinX([self.accessoryView frame]) : NSMaxX([self frame]);
 
@@ -96,73 +94,70 @@
 @synthesize accessoryView = _accessoryView;
 @dynamic hasDisclosureButton;
 
-- (id)initWithFrame:(NSRect)frame;
-{
+- (id)initWithFrame:(NSRect)frame {
     [NSException raise:NSGenericException format:@"%s is not the designated initialiser for instances of class: %@",__func__,[self className]];
     return nil;
 }
 
-- (id)initWithFrame:(NSRect)frame expanded:(BOOL)expanded;
-{
-    if (![super initWithFrame:frame])
-        return nil;
-    
-    self.drawsBorder = YES;
-    self.borderSidesMask = (TLMinYEdge|TLMaxYEdge);
-    self.drawsHighlight = YES;
-    [self setAutoresizesSubviews:YES];
-    [self setAutoresizingMask:NSViewWidthSizable];
-    
-    self.activeFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
-    self.inactiveFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],nil]] autorelease];
-    self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.83f alpha:1.0f],nil]] autorelease];
-    
-    NSRect disclosureFrame = frame;
-    disclosureFrame.origin.x += TL_DISCLOSURE_BAR_MINX_PADDING;
-    disclosureFrame.size.width = 10.0f;
-    NSButton *disclosureButton = [[[NSButton alloc] initWithFrame:disclosureFrame] autorelease];
-    self.disclosureButton = disclosureButton;
-    [self.disclosureButton setButtonType:NSOnOffButton];
-    [self.disclosureButton setBezelStyle:NSDisclosureBezelStyle];
-    [self.disclosureButton setTitle:@""];
-    [self.disclosureButton setFocusRingType:NSFocusRingTypeNone];
-    [self.disclosureButton setState:expanded ? NSOnState : NSOffState];
-    [self addSubview:self.disclosureButton];
-    
-    NSRect imageViewLeftFrame = disclosureFrame;
-    imageViewLeftFrame.origin.x = NSMaxX(imageViewLeftFrame) + TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
-    imageViewLeftFrame.size.width = NSHeight(imageViewLeftFrame);
-    imageViewLeftFrame = NSInsetRect(imageViewLeftFrame, 0.0f, 1.5f);
-    self.imageViewLeft = [[[NSImageView alloc] initWithFrame:imageViewLeftFrame] autorelease];
-    [self.imageViewLeft setEditable:NO];
-    [self.imageViewLeft setAnimates:YES];
-    [self.imageViewLeft setImageFrameStyle:NSImageFrameNone];
-    [self.imageViewLeft setImageScaling:NSImageScaleProportionallyDown];
-    [self.imageViewLeft setAllowsCutCopyPaste:NO];
-    [self.imageViewLeft setImageAlignment:NSImageAlignCenter];
-    [self addSubview:self.imageViewLeft];
+- (id)initWithFrame:(NSRect)frame expanded:(BOOL)expanded {
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.drawsBorder = YES;
+        self.borderSidesMask = (TLMinYEdge|TLMaxYEdge);
+        self.drawsHighlight = YES;
+        [self setAutoresizesSubviews:YES];
+        [self setAutoresizingMask:NSViewWidthSizable];
         
-    NSRect labelRect = imageViewLeftFrame;
-    labelRect.origin.x = NSMaxX(imageViewLeftFrame) + TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
-    labelRect.size.width = NSWidth([self frame]) - NSMinX(labelRect);
-    self.labelField = [[[NSTextField alloc] initWithFrame:labelRect] autorelease];
-    [self.labelField setEditable:NO];
-    [self.labelField setBezeled:NO];
-    [self.labelField setDrawsBackground:NO];
-    [self.labelField setTextColor:[NSColor blackColor]];
-    [[self.labelField cell] setBackgroundStyle:NSBackgroundStyleRaised];
-    [[self.labelField cell] setControlSize:NSSmallControlSize];
-    [[self.labelField cell] setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:[[self.labelField cell] controlSize]]]];
-    [[self.labelField cell] setWraps:NO];
-    [[self.labelField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
-    [self.labelField setAutoresizingMask:NSViewWidthSizable];
-    [self addSubview:self.labelField];
+        self.activeFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
+        self.inactiveFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],nil]] autorelease];
+        self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.83f alpha:1.0f],nil]] autorelease];
         
+        NSRect disclosureFrame = frame;
+        disclosureFrame.origin.x += TL_DISCLOSURE_BAR_MINX_PADDING;
+        disclosureFrame.size.width = 10.0;
+        NSButton *disclosureButton = [[[NSButton alloc] initWithFrame:disclosureFrame] autorelease];
+        self.disclosureButton = disclosureButton;
+        [self.disclosureButton setButtonType:NSOnOffButton];
+        [self.disclosureButton setBezelStyle:NSDisclosureBezelStyle];
+        [self.disclosureButton setTitle:@""];
+        [self.disclosureButton setFocusRingType:NSFocusRingTypeNone];
+        [self.disclosureButton setState:expanded ? NSOnState : NSOffState];
+        [self addSubview:self.disclosureButton];
+        
+        NSRect imageViewLeftFrame = disclosureFrame;
+        imageViewLeftFrame.origin.x = NSMaxX(imageViewLeftFrame) + TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
+        imageViewLeftFrame.size.width = NSHeight(imageViewLeftFrame);
+        imageViewLeftFrame = NSInsetRect(imageViewLeftFrame, 0.0, 1.5);
+        self.imageViewLeft = [[[NSImageView alloc] initWithFrame:imageViewLeftFrame] autorelease];
+        [self.imageViewLeft setEditable:NO];
+        [self.imageViewLeft setAnimates:YES];
+        [self.imageViewLeft setImageFrameStyle:NSImageFrameNone];
+        [self.imageViewLeft setImageScaling:NSImageScaleProportionallyDown];
+        [self.imageViewLeft setAllowsCutCopyPaste:NO];
+        [self.imageViewLeft setImageAlignment:NSImageAlignCenter];
+        [self addSubview:self.imageViewLeft];
+            
+        NSRect labelRect = imageViewLeftFrame;
+        labelRect.origin.x = NSMaxX(imageViewLeftFrame) + TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
+        labelRect.size.width = NSWidth([self frame]) - NSMinX(labelRect);
+        self.labelField = [[[NSTextField alloc] initWithFrame:labelRect] autorelease];
+        [self.labelField setEditable:NO];
+        [self.labelField setBezeled:NO];
+        [self.labelField setDrawsBackground:NO];
+        [self.labelField setTextColor:[NSColor blackColor]];
+        [[self.labelField cell] setBackgroundStyle:NSBackgroundStyleRaised];
+        [[self.labelField cell] setControlSize:NSSmallControlSize];
+        [[self.labelField cell] setFont:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:[[self.labelField cell] controlSize]]]];
+        [[self.labelField cell] setWraps:NO];
+        [[self.labelField cell] setLineBreakMode:NSLineBreakByTruncatingTail];
+        [self.labelField setAutoresizingMask:NSViewWidthSizable];
+        [self addSubview:self.labelField];
+    }
+    
     return self;
 }
 
-- (id)initWithFrame:(NSRect)frame leftImage:(NSImage *)leftImage label:(NSString *)label expanded:(BOOL)expanded;
-{
+- (id)initWithFrame:(NSRect)frame leftImage:(NSImage *)leftImage label:(NSString *)label expanded:(BOOL)expanded {
     if (![self initWithFrame:frame expanded:expanded])
         return nil;
     [self setLeftImage:leftImage];
@@ -170,29 +165,27 @@
     return self;
 }
 
-- (NSArray *)keysForCoding;
-{
+- (NSArray *)keysForCoding {
     return [NSArray arrayWithObjects:nil];
 }
 
-- (id)initWithCoder:(NSCoder *)coder;
-{
-    if (![super initWithCoder:coder])
-        return nil;
-    for (NSString *key in [self keysForCoding])
-        [coder encodeObject:[self valueForKey:key] forKey:key];
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    if (self) {
+        for (NSString *key in [self keysForCoding])
+            [coder encodeObject:[self valueForKey:key] forKey:key];
+    }
+    
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder;
-{
+- (void)encodeWithCoder:(NSCoder *)coder {
     for (NSString *key in [self keysForCoding])
         [self setValue:[coder decodeObjectForKey:key] forKey:key];
     [super encodeWithCoder:coder];
 }
 
-- (void)dealloc;
-{
+- (void)dealloc {
     [_disclosureButton release];
     [_imageViewLeft release];
     [_accessoryView release];
@@ -200,32 +193,27 @@
     [super dealloc];
 }
 
-- (void)resizeSubviewsWithOldSize:(NSSize)oldSize;
-{
+- (void)resizeSubviewsWithOldSize:(NSSize)oldSize {
     [super resizeSubviewsWithOldSize:oldSize];
     [self _adjustSubviewsFollowingResize];
 }
 
-- (BOOL)hasDisclosureButton;
-{
+- (BOOL)hasDisclosureButton {
     return ![self.disclosureButton isHidden];
 }
 
-- (void)setHasDisclosureButton:(BOOL)flag;
-{
+- (void)setHasDisclosureButton:(BOOL)flag {
     if (self.hasDisclosureButton == flag)
         return;
     [self.disclosureButton setHidden:self.hasDisclosureButton];
     [self _adjustSubviews];
 }
 
-- (void)setLeftImage:(NSImage *)image;
-{
+- (void)setLeftImage:(NSImage *)image {
     [self.imageViewLeft setImage:image];
 }
 
-- (void)setAccessoryView:(NSView *)accessoryView;
-{
+- (void)setAccessoryView:(NSView *)accessoryView {
     if (_accessoryView == accessoryView)
         return;
     if (_accessoryView) {
@@ -247,8 +235,7 @@
     [self.labelField setFrame:labelFieldFrame];
 }
 
-- (void)setLabel:(NSString *)label;
-{
+- (void)setLabel:(NSString *)label {
     NSSize size = [label sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:[[self.labelField cell] controlSize]]],NSFontAttributeName,nil]];
     NSRect frame = [self.labelField frame];
     frame.size.height = size.height;
@@ -257,18 +244,15 @@
     [self.labelField setStringValue:label];
 }
 
-- (NSString *)label;
-{
+- (NSString *)label {
     return [self.labelField stringValue];
 }
 
-- (void)mouseDown:(NSEvent *)event;
-{
+- (void)mouseDown:(NSEvent *)event {
     self.fillOption = TLGradientViewClickedGradient;
 }
 
-- (void)mouseUp:(NSEvent *)event;
-{
+- (void)mouseUp:(NSEvent *)event {
     self.fillOption = TLGradientViewActiveGradient;
     
     NSPoint mouseLocation = [self convertPoint:[event locationInWindow] fromView:nil];
@@ -276,8 +260,7 @@
         [self.disclosureButton sendAction:[self.disclosureButton action] to:[self.disclosureButton target]];
 }
 
-- (void)mouseDragged:(NSEvent *)event;
-{
+- (void)mouseDragged:(NSEvent *)event {
     NSPoint mouseLocation = [self convertPoint:[event locationInWindow] fromView:nil];
     if (NSMouseInRect(mouseLocation, [self bounds], [self isFlipped]))
         self.fillOption = TLGradientViewClickedGradient;

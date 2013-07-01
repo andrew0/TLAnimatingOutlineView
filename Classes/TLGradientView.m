@@ -59,59 +59,56 @@
 @synthesize borderColor = _borderColor;
 @synthesize borderSidesMask = _borderSidesMask;
 
-- (id)init;
-{
-    if (![super init])
-        return nil;
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(display) name:NSApplicationDidBecomeActiveNotification object:NSApp];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(display) name:NSApplicationDidResignActiveNotification object:NSApp];
+- (id)init {
+    self = [super init];
+    if (self) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(display) name:NSApplicationDidBecomeActiveNotification object:NSApp];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(display) name:NSApplicationDidResignActiveNotification object:NSApp];
+    }
     
     return self;
 }
 
 - (id)initWithFrame:(NSRect)frame;
 {
-    if (![super initWithFrame:frame])
-        return nil;
-    
-    self.activeFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
-    self.inactiveFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],nil]] autorelease];
-    self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
-    self.fillOption = TLGradientViewActiveGradient;
-    self.fillAngle = 270.0f;
-    
-    self.borderColor = [NSColor lightGrayColor];
-    self.borderSidesMask = (TLMinXEdge|TLMaxXEdge|TLMinYEdge|TLMaxYEdge);
-    
-    self.highlightColor = [NSColor colorWithCalibratedWhite:0.97f alpha:1.0f];
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.activeFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
+        self.inactiveFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],nil]] autorelease];
+        self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
+        self.fillOption = TLGradientViewActiveGradient;
+        self.fillAngle = 270.0;
+        
+        self.borderColor = [NSColor lightGrayColor];
+        self.borderSidesMask = (TLMinXEdge|TLMaxXEdge|TLMinYEdge|TLMaxYEdge);
+        
+        self.highlightColor = [NSColor colorWithCalibratedWhite:0.97 alpha:1.0];
+    }
     
     return self;
 }
 
-- (NSArray *)keysForCoding;
-{
+- (NSArray *)keysForCoding {
     return [NSArray arrayWithObjects:nil];
 }
 
-- (id)initWithCoder:(NSCoder *)coder;
-{
-    if (![super initWithCoder:coder])
-        return nil;
-    for (NSString *key in [self keysForCoding])
-        [coder encodeObject:[self valueForKey:key] forKey:key];
+- (id)initWithCoder:(NSCoder *)coder {
+    self = [super initWithCoder:coder];
+    if (self) {
+        for (NSString *key in [self keysForCoding])
+            [coder encodeObject:[self valueForKey:key] forKey:key];
+    }
+    
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)coder;
-{
+- (void)encodeWithCoder:(NSCoder *)coder {
     for (NSString *key in [self keysForCoding])
         [self setValue:[coder decodeObjectForKey:key] forKey:key];
     [super encodeWithCoder:coder];
 }
 
-- (void)dealloc;
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_activeFillGradient release];
     [_inactiveFillGradient release];
@@ -121,8 +118,7 @@
     [super dealloc];
 }
 
-- (void)viewWillMoveToSuperview:(NSView *)superview;
-{
+- (void)viewWillMoveToSuperview:(NSView *)superview {
     [super viewWillMoveToSuperview:superview];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:[self window]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:[self window]];
@@ -133,14 +129,12 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(display) name:NSWindowDidBecomeKeyNotification object:[superview window]];
 }
 
-- (void)setBorderSidesMask:(TLRectEdge)mask;
-{
+- (void)setBorderSidesMask:(TLRectEdge)mask {
     _borderSidesMask = mask;
     [self setNeedsDisplay:YES];
 }
 
-- (void)setClickedFillGradient:(NSGradient *)gradient;
-{
+- (void)setClickedFillGradient:(NSGradient *)gradient {
     if (_clickedFillGradient == gradient)
         return;
     [gradient retain];
@@ -149,8 +143,7 @@
     [self setNeedsDisplay:YES];
 }
 
-- (void)setActiveFillGradient:(NSGradient *)gradient;
-{
+- (void)setActiveFillGradient:(NSGradient *)gradient {
     if (_activeFillGradient == gradient)
         return;
     [gradient retain];
@@ -159,8 +152,7 @@
     [self setNeedsDisplay:YES];
 }
 
-- (void)setInactiveFillGradient:(NSGradient *)gradient;
-{
+- (void)setInactiveFillGradient:(NSGradient *)gradient {
     if (_inactiveFillGradient == gradient)
         return;
     [gradient retain];    
@@ -169,36 +161,31 @@
     [self setNeedsDisplay:YES];
 }
 
-- (void)setFillOption:(TLGradientViewFillOption)options;
-{
+- (void)setFillOption:(TLGradientViewFillOption)options {
     _fillOption = options;
     [self setNeedsDisplay:YES];
 }
 
-- (void)setFillAngle:(CGFloat)angle;
-{
+- (void)setFillAngle:(CGFloat)angle {
     _fillAngle = angle;
     [self setNeedsDisplay:YES];
 }
 
-- (void)setDrawsHighlight:(BOOL)flag;
-{
+- (void)setDrawsHighlight:(BOOL)flag {
     if (_drawsHighlight == flag)
         return;
     _drawsHighlight = flag;
     [self setNeedsDisplay:YES];
 }
 
-- (void)setDrawsBorder:(BOOL)flag;
-{
+- (void)setDrawsBorder:(BOOL)flag {
     if (_drawsBorder == flag)
         return;
     _drawsBorder = flag;
     [self setNeedsDisplay:YES];
 }
 
-- (void)setBorderColor:(NSColor *)color;
-{
+- (void)setBorderColor:(NSColor *)color {
     if (_borderColor == color)
         return;
     [color retain];    
@@ -207,8 +194,7 @@
     [self setNeedsDisplay:YES];
 }
 
-- (void)drawRect:(NSRect)rect;
-{
+- (void)drawRect:(NSRect)rect {
     NSGradient *fillGradient = nil;
     if (self.fillOption != TLGradientViewClickedGradient)
         fillGradient = [[self window] isKeyWindow] ? self.activeFillGradient : self.inactiveFillGradient;

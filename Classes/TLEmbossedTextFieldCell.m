@@ -47,9 +47,9 @@
 @implementation TLEmbossedTextFieldCell
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
     NSShadow *shadow = [[[NSShadow alloc] init] autorelease];
-    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0.96f alpha:1.0f]];
-    [shadow setShadowBlurRadius:0.0f];
-    [shadow setShadowOffset:NSMakeSize(0.0f, -1.0f)];
+    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0.96 alpha:1.0]];
+    [shadow setShadowBlurRadius:0.0];
+    [shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
     [shadow set];
     [super drawInteriorWithFrame:cellFrame inView:controlView];
 }

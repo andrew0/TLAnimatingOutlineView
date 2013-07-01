@@ -110,7 +110,7 @@
         
         self.activeFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
         self.inactiveFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],nil]] autorelease];
-        self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.83f alpha:1.0f],nil]] autorelease];
+        self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.83 alpha:1.0],nil]] autorelease];
         
         NSRect disclosureFrame = frame;
         disclosureFrame.origin.x += TL_DISCLOSURE_BAR_MINX_PADDING;

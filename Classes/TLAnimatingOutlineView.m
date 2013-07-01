@@ -170,7 +170,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
         if (previousSubview != nil)
             viewFrame.origin.y = NSMaxY([previousSubview frame]) + [self.delegate rowSeparation];
         else // we're looking at the subview at index 0. This handles the case where subview at index 0 is removed.
-            viewFrame.origin.y = 0.0f + [self.delegate rowSeparation];
+            viewFrame.origin.y = 0.0 + [self.delegate rowSeparation];
         [view setFrame:viewFrame];
         previousSubview = view;
     }
@@ -346,7 +346,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
         
         NSMutableArray *allViewAnimations = [NSMutableArray arrayWithObject:fadeOutAnimationInfo];
         NSRect targetFrame = [item frame];
-        targetFrame.size.height = 0.0f; // This is the only case where the target frame is not the same as that of the animating subview.
+        targetFrame.size.height = 0.0; // This is the only case where the target frame is not the same as that of the animating subview.
         [allViewAnimations addObjectsFromArray:[self _viewAnimationsForSubviewsPositionedBelowSubview:item withTargetFrame:targetFrame]];
         
         self.removalAnimation = [[[NSViewAnimation alloc] initWithViewAnimations:allViewAnimations] autorelease];

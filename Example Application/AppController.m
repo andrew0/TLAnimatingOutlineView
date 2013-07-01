@@ -39,7 +39,7 @@
 - (void)awakeFromNib;
 {
     NSSize contentSize = [_scrollView contentSize];
-    TLAnimatingOutlineView *outlineView = [[[TLAnimatingOutlineView alloc] initWithFrame:NSMakeRect(0.0f, 0.0f, contentSize.width, contentSize.height)] autorelease];
+    TLAnimatingOutlineView *outlineView = [[[TLAnimatingOutlineView alloc] initWithFrame:NSMakeRect(0.0, 0.0, contentSize.width, contentSize.height)] autorelease];
     [outlineView setDelegate:self];
     [outlineView setAutoresizingMask:NSViewWidthSizable]; // should not be combined with NSviewHieghtSizable else we have incorrect scrollbar showing/hiding/sizing behaviour.
     [_scrollView setDocumentView:outlineView];
@@ -54,7 +54,7 @@
     
     view = [outlineView addView:_detailView4 withImage:[NSImage imageNamed:NSImageNamePreferencesGeneral] label:@"Yet another"  expanded:NO];
     
-//    [self performSelector:@selector(insertionTest) withObject:nil afterDelay:4.0f];
+//    [self performSelector:@selector(insertionTest) withObject:nil afterDelay:4.0];
 }
 
 - (void)frameTest;
@@ -62,7 +62,7 @@
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
     NSView *view = [(TLCollapsibleView *)[[outlineView subviews] objectAtIndex:0] detailView];
     NSRect frame = [view frame];
-    frame.size.height += 100.0f;
+    frame.size.height += 100.0;
     [view setFrame:frame];
 }
 
@@ -70,32 +70,32 @@
 {
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
     
-    NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0f, 0.0f, 700.0f, 300.0f)] autorelease];
+    NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 700.0, 300.0)] autorelease];
     
     [outlineView insertView:customView atRow:1 withImage:nil label:@"test" expanded:NO animate:YES];
     
-    [self performSelector:@selector(removalTest) withObject:nil afterDelay:4.0f];
+    [self performSelector:@selector(removalTest) withObject:nil afterDelay:4.0];
 }
 
 - (void)removalTest;
 {
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
     [outlineView removeItemAtRow:2 animate:YES];
-    [self performSelector:@selector(additionTest) withObject:nil afterDelay:4.0f];
+    [self performSelector:@selector(additionTest) withObject:nil afterDelay:4.0];
 }
 
 - (void)additionTest;
 {
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
-    NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0f, 0.0f, 700.0f, 300.0f)] autorelease];
+    NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 700.0, 300.0)] autorelease];
     
     [outlineView addView:customView withImage:nil label:@"added" expanded:NO animate:NO];
     
-    [self performSelector:@selector(frameTest) withObject:nil afterDelay:4.0f];
+    [self performSelector:@selector(frameTest) withObject:nil afterDelay:4.0];
 }
 
 - (CGFloat)rowSeparation;
 {
-    return 1.0f;
+    return 1.0;
 }
 @end

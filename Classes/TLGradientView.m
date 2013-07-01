@@ -208,19 +208,19 @@
         NSBezierPath *border = [NSBezierPath bezierPath];
         NSRect bounds = [self bounds];
         if (self.borderSidesMask & TLMinXEdge)
-            [border appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(NSMinX(bounds) + 0.5f, NSMinY(bounds), 0.0f, NSHeight(bounds))]];
+            [border appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(NSMinX(bounds) + 0.5, NSMinY(bounds), 0.0, NSHeight(bounds))]];
         if (self.borderSidesMask & TLMaxXEdge)
-            [border appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(NSMaxX(bounds) - 0.5f, NSMinY(bounds), 0.0f, NSHeight(bounds))]];
+            [border appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(NSMaxX(bounds) - 0.5, NSMinY(bounds), 0.0, NSHeight(bounds))]];
         if (self.borderSidesMask & TLMinYEdge)
-            [border appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(NSMinX(bounds), NSMinY(bounds) + 0.5f, NSWidth(bounds), 0.0f)]];
+            [border appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(NSMinX(bounds), NSMinY(bounds) + 0.5, NSWidth(bounds), 0.0)]];
         if (self.borderSidesMask & TLMaxYEdge)
-            [border appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(NSMinX(bounds), NSMaxY(bounds) - 0.5f, NSWidth(bounds), 0.0f)]];
+            [border appendBezierPath:[NSBezierPath bezierPathWithRect:NSMakeRect(NSMinX(bounds), NSMaxY(bounds) - 0.5, NSWidth(bounds), 0.0)]];
         [border stroke];
     }
     
     if (self.drawsHighlight) {
         [self.highlightColor setStroke];
-        [[NSBezierPath bezierPathWithRect:NSMakeRect(NSMinX([self bounds]), [self isFlipped] ? NSMinY([self bounds]) + (self.borderSidesMask & TLMinYEdge ? 1.5f : 0.5f) : NSMaxY([self bounds]) - (self.borderSidesMask & TLMaxYEdge ? 1.5f : 0.5f), NSWidth([self bounds]), 0.0f)] stroke];
+        [[NSBezierPath bezierPathWithRect:NSMakeRect(NSMinX([self bounds]), [self isFlipped] ? NSMinY([self bounds]) + (self.borderSidesMask & TLMinYEdge ? 1.5 : 0.5) : NSMaxY([self bounds]) - (self.borderSidesMask & TLMaxYEdge ? 1.5 : 0.5), NSWidth([self bounds]), 0.0)] stroke];
     }
 }
 

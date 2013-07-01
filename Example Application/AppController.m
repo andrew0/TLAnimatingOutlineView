@@ -35,10 +35,18 @@
 #import "TLCollapsibleView.h"
 #import "TLDisclosureBar.h"
 
-@implementation AppController
+@implementation AppController {
+    IBOutlet NSWindow *_mainWindow;
+    IBOutlet NSScrollView *_scrollView;
+    IBOutlet NSView *_detailView1;
+    IBOutlet NSView *_detailView2;
+    IBOutlet NSView *_detailView3;
+    IBOutlet NSView *_detailView4;
+}
+
 - (void)awakeFromNib {
     NSSize contentSize = [_scrollView contentSize];
-    TLAnimatingOutlineView *outlineView = [[[TLAnimatingOutlineView alloc] initWithFrame:NSMakeRect(0.0, 0.0, contentSize.width, contentSize.height)] autorelease];
+    TLAnimatingOutlineView *outlineView = [[[TLAnimatingOutlineView alloc] initWithFrame:NSMakeRect(0.0, 0.0, contentSize.width, contentSize.height)] tl_autorelease];
     [outlineView setDelegate:self];
     [outlineView setAutoresizingMask:NSViewWidthSizable]; // should not be combined with NSviewHieghtSizable else we have incorrect scrollbar showing/hiding/sizing behaviour.
     [_scrollView setDocumentView:outlineView];
@@ -67,7 +75,7 @@
 - (void)insertionTest {
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
     
-    NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 700.0, 300.0)] autorelease];
+    NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 700.0, 300.0)] tl_autorelease];
     
     [outlineView insertView:customView atRow:1 withImage:nil label:@"test" expanded:NO animate:YES];
     
@@ -82,7 +90,7 @@
 
 - (void)additionTest {
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
-    NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 700.0, 300.0)] autorelease];
+    NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 700.0, 300.0)] tl_autorelease];
     
     [outlineView addView:customView withImage:nil label:@"added" expanded:NO animate:NO];
     

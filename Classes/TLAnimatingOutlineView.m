@@ -42,7 +42,6 @@ NSString *TLAnimatingOutlineViewItemWillCollapseNotification = @"TLAnimatingOutl
 NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutlineViewItemDidCollapseNotification";
 
 @interface TLAnimatingOutlineView ()
-@property(nonatomic,readwrite,assign) BOOL animating;
 @property(nonatomic,readwrite,copy) NSViewAnimation *insertionAnimation;
 @property(nonatomic,readwrite,copy) NSViewAnimation *removalAnimation;
 @property(nonatomic,readwrite,copy) NSViewAnimation *expandAnimation;
@@ -114,7 +113,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
         [animationsForOtherSubviews addObject:subviewAnimationInfo];
         newPrecedingViewFrame = newSubviewFrame;
     }
-    return [[animationsForOtherSubviews copy] autorelease];
+    return [[animationsForOtherSubviews copy] tl_autorelease];
 }
 
 - (void)_animateSubviewsWithAnimationInfo:(NSDictionary *)info {
@@ -131,7 +130,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
     if ([[info objectForKey:TLCollapsibleViewAnimationTypeKey] unsignedIntValue] == TLCollapsibleViewExpansionAnimation)
         [self _temporarilyExpandFrame];
     
-    NSViewAnimation *animation = [[[NSViewAnimation alloc] initWithViewAnimations:allViewAnimations] autorelease];
+    NSViewAnimation *animation = [[[NSViewAnimation alloc] initWithViewAnimations:allViewAnimations] tl_autorelease];
     [animation setDuration:0.25];
     [animation setDelegate:self];
     [animation setAnimationCurve:NSAnimationEaseInOut];
@@ -184,14 +183,18 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 
 @end
 
-@implementation TLAnimatingOutlineView
-@synthesize delegate = _delegate; // assigned
-@synthesize animating = _animating;
+@implementation TLAnimatingOutlineView {
+    NSViewAnimation *_insertionAnimation;
+    NSViewAnimation *_removalAnimation;
+    NSViewAnimation *_expandAnimation;
+    NSViewAnimation *_collapseAnimation;
+    BOOL _allowsSingleSubviewExpansion;
+}
+
 @synthesize insertionAnimation = _insertionAnimation;
 @synthesize removalAnimation = _removalAnimation;
 @synthesize expandAnimation = _expandAnimation;
 @synthesize collapseAnimation = _collapseAnimation;
-@synthesize allowsSingleSubviewExpansion = _allowsSingleSubviewExpansion;
 
 - (NSArray *)keysForCoding {
     return [NSArray arrayWithObjects:nil];
@@ -217,11 +220,11 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
     [self _removeDelegateAsObserver];
     for (NSView *subview in [self subviews])
         [[NSNotificationCenter defaultCenter] removeObserver:self name:TLCollapsibleViewDetailViewDidChangeFrameNotification object:subview];
-    [_insertionAnimation release];
-    [_removalAnimation release];
-    [_expandAnimation release];
-    [_collapseAnimation release];
-    [super dealloc];
+    [_insertionAnimation tl_release];
+    [_removalAnimation tl_release];
+    [_expandAnimation tl_release];
+    [_collapseAnimation tl_release];
+    TL_SUPER_DEALLOC();
 }
 
 - (BOOL)isFlipped {
@@ -264,7 +267,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
     else
         collapsibleViewFrame.origin.y = [self.delegate rowSeparation];
     
-    TLCollapsibleView *collapsibleView = [[[TLCollapsibleView alloc] initWithFrame:collapsibleViewFrame detailView:detailView expanded:expanded] autorelease];
+    TLCollapsibleView *collapsibleView = [[[TLCollapsibleView alloc] initWithFrame:collapsibleViewFrame detailView:detailView expanded:expanded] tl_autorelease];
     [[collapsibleView disclosureBar] setLabel:label];
     [[collapsibleView disclosureBar] setLeftImage:image];
     [self addSubview:collapsibleView];    
@@ -274,7 +277,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
             
         [self _temporarilyExpandFrame];
         
-        self.insertionAnimation = [[[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:fadeInAnimationInfo,nil]] autorelease];
+        self.insertionAnimation = [[[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:fadeInAnimationInfo,nil]] tl_autorelease];
         [self.insertionAnimation setDuration:0.25];
         [self.insertionAnimation setAnimationCurve:NSAnimationEaseInOut];
         [self.insertionAnimation setDelegate:self];
@@ -308,7 +311,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
     NSRect collapsibleViewFrame = [self frame];
     collapsibleViewFrame.size.height = NSHeight([detailView frame]);
     collapsibleViewFrame.origin.y = NSMinY([[[self subviews] objectAtIndex:row] frame]) + [self.delegate rowSeparation];
-    TLCollapsibleView *collapsibleView = [[[TLCollapsibleView alloc] initWithFrame:collapsibleViewFrame detailView:detailView expanded:expanded] autorelease];
+    TLCollapsibleView *collapsibleView = [[[TLCollapsibleView alloc] initWithFrame:collapsibleViewFrame detailView:detailView expanded:expanded] tl_autorelease];
     [[collapsibleView disclosureBar] setLabel:label];
     [[collapsibleView disclosureBar] setLeftImage:image];
     [subviews insertObject:collapsibleView atIndex:row];
@@ -320,7 +323,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
         [allViewAnimations addObjectsFromArray:[self _viewAnimationsForSubviewsPositionedBelowSubview:collapsibleView withTargetFrame:[collapsibleView frame]]]; // this is recalculated as TLCollapsibleView reserves the right to alter the frame passed to it.
         [self _temporarilyExpandFrame];
         
-        self.insertionAnimation = [[[NSViewAnimation alloc] initWithViewAnimations:allViewAnimations] autorelease];
+        self.insertionAnimation = [[[NSViewAnimation alloc] initWithViewAnimations:allViewAnimations] tl_autorelease];
         [self.insertionAnimation setDuration:0.25];
         [self.insertionAnimation setAnimationCurve:NSAnimationEaseInOut];
         [self.insertionAnimation setDelegate:self];
@@ -349,7 +352,7 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
         targetFrame.size.height = 0.0; // This is the only case where the target frame is not the same as that of the animating subview.
         [allViewAnimations addObjectsFromArray:[self _viewAnimationsForSubviewsPositionedBelowSubview:item withTargetFrame:targetFrame]];
         
-        self.removalAnimation = [[[NSViewAnimation alloc] initWithViewAnimations:allViewAnimations] autorelease];
+        self.removalAnimation = [[[NSViewAnimation alloc] initWithViewAnimations:allViewAnimations] tl_autorelease];
         [self.removalAnimation setDuration:0.4];
         [self.removalAnimation setAnimationCurve:NSAnimationEaseInOut];
         [self.removalAnimation setDelegate:self];
@@ -482,13 +485,13 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
 
 @implementation TLAnimatingOutlineView (NSViewAnimationDelegate)
 - (BOOL)animationShouldStart:(NSAnimation *)animation {
-    self.animating = YES;
+    _animating = YES;
     [[self subviews] makeObjectsPerformSelector:@selector(setAnimating:) withObject:[NSNumber numberWithBool:YES]];
     return YES;
 }
 
 - (void)animationDidEnd:(NSAnimation *)animation {
-    self.animating = NO;
+    _animating = NO;
     [[self subviews] makeObjectsPerformSelector:@selector(setAnimating:) withObject:[NSNumber numberWithBool:NO]];
     
     TLCollapsibleView *animatedSubview = [[[(NSViewAnimation *)animation viewAnimations] objectAtIndex:0] objectForKey:NSViewAnimationTargetKey];

@@ -31,7 +31,7 @@
 // For example, "Contains code from "TLAnimatingOutlineView" by Jonathan Dann http://code.google.com/p/tlanimatingoutlineview/" will do.
 
 #import "TLDisclosureBar.h"
-
+#import "TLAnimatingOutlineView.h"
 #import "TLCollapsibleView.h"
 
 #define TL_DISCLOSURE_BAR_SUBVIEW_SPACING 6.0
@@ -39,10 +39,10 @@
 #define TL_DISCLOSURE_BAR_MINX_PADDING 8.0
 
 @interface TLDisclosureBar ()
-@property(nonatomic,readwrite,retain) NSButton *disclosureButton;
-@property(nonatomic,readwrite,retain) NSImageView *imageViewLeft;
-@property(nonatomic,readwrite,retain) NSTextField *labelField;
-//@property(nonatomic,readwrite,retain) NSView *accessoryView;
+@property(nonatomic,readwrite,tl_strong) NSButton *disclosureButton;
+@property(nonatomic,readwrite,tl_strong) NSImageView *imageViewLeft;
+@property(nonatomic,readwrite,tl_strong) NSTextField *labelField;
+//@property(nonatomic,readwrite,tl_retain) NSView *accessoryView;
 @end
 
 @interface TLDisclosureBar (Private)
@@ -93,7 +93,13 @@
 
 @end
 
-@implementation TLDisclosureBar
+@implementation TLDisclosureBar {
+    NSButton *_disclosureButton;
+    NSImageView *_imageViewLeft;
+    NSTextField *_labelField;
+    NSView *_accessoryView;
+}
+
 @synthesize disclosureButton = _disclosureButton;
 @synthesize imageViewLeft = _imageViewLeft;
 @synthesize labelField = _labelField;
@@ -114,14 +120,14 @@
         [self setAutoresizesSubviews:YES];
         [self setAutoresizingMask:NSViewWidthSizable];
         
-        self.activeFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
-        self.inactiveFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],nil]] autorelease];
-        self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.83 alpha:1.0],nil]] autorelease];
+        self.activeFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] tl_autorelease];
+        self.inactiveFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],nil]] tl_autorelease];
+        self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.83 alpha:1.0],nil]] tl_autorelease];
         
         NSRect disclosureFrame = frame;
         disclosureFrame.origin.x += TL_DISCLOSURE_BAR_MINX_PADDING;
         disclosureFrame.size.width = 10.0;
-        NSButton *disclosureButton = [[[NSButton alloc] initWithFrame:disclosureFrame] autorelease];
+        NSButton *disclosureButton = [[[NSButton alloc] initWithFrame:disclosureFrame] tl_autorelease];
         self.disclosureButton = disclosureButton;
         [self.disclosureButton setButtonType:NSOnOffButton];
         [self.disclosureButton setBezelStyle:NSDisclosureBezelStyle];
@@ -134,7 +140,7 @@
         imageViewLeftFrame.origin.x = NSMaxX(imageViewLeftFrame) + TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
         imageViewLeftFrame.size.width = NSHeight(imageViewLeftFrame);
         imageViewLeftFrame = NSInsetRect(imageViewLeftFrame, 0.0, 1.5);
-        self.imageViewLeft = [[[NSImageView alloc] initWithFrame:imageViewLeftFrame] autorelease];
+        self.imageViewLeft = [[[NSImageView alloc] initWithFrame:imageViewLeftFrame] tl_autorelease];
         [self.imageViewLeft setEditable:NO];
         [self.imageViewLeft setAnimates:YES];
         [self.imageViewLeft setImageFrameStyle:NSImageFrameNone];
@@ -146,7 +152,7 @@
         NSRect labelRect = imageViewLeftFrame;
         labelRect.origin.x = NSMaxX(imageViewLeftFrame) + TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
         labelRect.size.width = NSWidth([self frame]) - NSMinX(labelRect);
-        self.labelField = [[[NSTextField alloc] initWithFrame:labelRect] autorelease];
+        self.labelField = [[[NSTextField alloc] initWithFrame:labelRect] tl_autorelease];
         [self.labelField setEditable:NO];
         [self.labelField setBezeled:NO];
         [self.labelField setDrawsBackground:NO];
@@ -192,11 +198,11 @@
 }
 
 - (void)dealloc {
-    [_disclosureButton release];
-    [_imageViewLeft release];
-    [_accessoryView release];
-    [_labelField release];
-    [super dealloc];
+    [_disclosureButton tl_release];
+    [_imageViewLeft tl_release];
+    [_accessoryView tl_release];
+    [_labelField tl_release];
+    TL_SUPER_DEALLOC();
 }
 
 - (void)resizeSubviewsWithOldSize:(NSSize)oldSize {
@@ -225,9 +231,9 @@
         return;
     if (_accessoryView) {
         [_accessoryView removeFromSuperview];
-        [_accessoryView release];
+        [_accessoryView tl_release];
     }
-    _accessoryView = [accessoryView retain];
+    _accessoryView = [accessoryView tl_retain];
     NSRect accessoryViewFrame = [_accessoryView frame];
     accessoryViewFrame.origin.x = NSMaxX([self frame]) - NSWidth(accessoryViewFrame);
     [accessoryView setFrame:accessoryViewFrame];

@@ -33,14 +33,6 @@
 #import <Cocoa/Cocoa.h>
 #import "TLAnimatingOutlineView.h"
 
-@interface AppController : NSObject <TLAnimatingOutlineViewDelegate> {
-@private
-    IBOutlet NSWindow *_mainWindow;
-    IBOutlet NSScrollView *_scrollView;
-    IBOutlet NSView *_detailView1;
-    IBOutlet NSView *_detailView2;
-    IBOutlet NSView *_detailView3;
-    IBOutlet NSView *_detailView4;
-}
+@interface AppController : NSObject <TLAnimatingOutlineViewDelegate>
 
 @end

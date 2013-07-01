@@ -32,10 +32,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-
-@interface TLEmbossedTextFieldCell : NSTextFieldCell {
-@private
-    
-}
+@interface TLEmbossedTextFieldCell : NSTextFieldCell
 
 @end

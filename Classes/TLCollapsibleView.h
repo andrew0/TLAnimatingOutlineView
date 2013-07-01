@@ -31,6 +31,7 @@
 // For example, "Contains code from "TLAnimatingOutlineView" by Jonathan Dann http://code.google.com/p/tlanimatingoutlineview/" will do.
 
 #import <Cocoa/Cocoa.h>
+#import "TLAnimatingOutlineView.h"
 
 enum {
     TLCollapsibleViewExpansionAnimation = 1 << 0,
@@ -40,18 +41,9 @@ typedef NSUInteger TLCollapsibleViewAnimationType;
 
 @protocol TLCollapsibleDetailView;
 @class TLDisclosureBar;
-@interface TLCollapsibleView : NSView <NSCoding, NSAnimationDelegate> {
-@private
-    TLDisclosureBar *_disclosureBar;
-    NSView <TLCollapsibleDetailView> *_detailView;
-    BOOL _expanded;
-    NSRect _targetFrame;
-    BOOL _animating;
-    NSViewAnimation *_expandAnimation;
-    NSViewAnimation *_collapseAnimation;
-}
-@property(nonatomic,readonly,retain) TLDisclosureBar *disclosureBar;
-@property(nonatomic,readwrite,retain) NSView <TLCollapsibleDetailView> *detailView;
+@interface TLCollapsibleView : NSView <NSCoding, NSAnimationDelegate>
+
+@property(nonatomic,readwrite,tl_strong) NSView <TLCollapsibleDetailView> *detailView;
 @property(nonatomic,readonly) BOOL expanded;
 @property(nonatomic,readwrite,assign) BOOL animating;
 @property(nonatomic,readwrite,assign) BOOL hasDisclosureButton;
@@ -62,12 +54,13 @@ extern NSString *TLCollapsibleViewAnimationInfoKey; // an NSDictionary the anima
 extern NSString *TLCollapsibleViewDetailViewAnimationInfoKey; // an NSDictionary the animation info for the detailView
 
 // on calling -expandAnimationInfo and -collapseAnimationInfo, the detail view will receive a -canCollapse or canExpand message if the optional methods of the TLCollapsibleDetailView protocol are implemented. If these return NO, then -expandAnimationInfo and -collapseAnimationInfo return nil;
-@property(nonatomic,readonly) NSDictionary *expandAnimationInfo;
-@property(nonatomic,readonly) NSDictionary *collapseAnimationInfo;
+@property(nonatomic,readonly,tl_weak) NSDictionary *expandAnimationInfo;
+@property(nonatomic,readonly,tl_weak) NSDictionary *collapseAnimationInfo;
 
 - (id)initWithFrame:(NSRect)frame detailView:(NSView <TLCollapsibleDetailView> *)detailView expanded:(BOOL)expanded;
 - (void)expand;
 - (void)collapse;
+- (TLDisclosureBar *)disclosureBar;
 
 // If the view is a subview of a TLCollapsibleOutlineView then the TLCollapsibleOutlineView will manage the animation and the animtion of any other subviews it has. If not then TLCollapsibleView istelf will animate.
 - (IBAction)toggleExpansionState:(id)sender;

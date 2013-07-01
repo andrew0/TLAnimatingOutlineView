@@ -32,19 +32,27 @@
 
 #import <Cocoa/Cocoa.h>
 
+#if __has_feature(objc_arc)
+#define tl_retain self
+#define tl_release self
+#define tl_autorelease self
+#define TL_SUPER_DEALLOC()
+#define tl_strong strong
+#define tl_weak weak
+#else
+#define tl_retain retain
+#define tl_release release
+#define tl_autorelease autorelease
+#define TL_SUPER_DEALLOC() [super dealloc]
+#define tl_strong retain
+#define tl_weak assign
+#endif
+
 @protocol TLAnimatingOutlineViewDelegate;
 @class TLCollapsibleView;
-@interface TLAnimatingOutlineView : NSView <NSCoding, NSAnimationDelegate> {
-@private
-    id <TLAnimatingOutlineViewDelegate> _delegate;
-    BOOL _animating;
-    NSViewAnimation *_insertionAnimation;
-    NSViewAnimation *_removalAnimation;
-    NSViewAnimation *_expandAnimation;
-    NSViewAnimation *_collapseAnimation;
-    BOOL _allowsSingleSubviewExpansion;
-}
-@property(nonatomic,readwrite,assign) id <TLAnimatingOutlineViewDelegate> delegate;
+@interface TLAnimatingOutlineView : NSView <NSCoding, NSAnimationDelegate>
+
+@property(nonatomic,readwrite,tl_weak) id <TLAnimatingOutlineViewDelegate> delegate;
 @property(nonatomic,readonly) BOOL animating;
 
 // WARNING: not yet implemented

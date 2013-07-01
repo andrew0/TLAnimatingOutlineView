@@ -32,8 +32,6 @@
 
 #import "TLGradientView.h"
 
-
-
 @interface TLGradientView ()
 
 @end
@@ -47,17 +45,6 @@
 @end
 
 @implementation TLGradientView
-@synthesize activeFillGradient = _activeFillGradient;
-@synthesize inactiveFillGradient = _inactiveFillGradient;
-@synthesize clickedFillGradient = _clickedFillGradient;
-@synthesize fillOption = _fillOption;
-@synthesize fillAngle = _fillAngle;
-@synthesize drawsHighlight = _drawsHighlight;
-@synthesize highlightColor = _highlightColor;
-@synthesize clickedHighlightColor = _clickedHighLightColor;
-@synthesize drawsBorder = _drawsBorder;
-@synthesize borderColor = _borderColor;
-@synthesize borderSidesMask = _borderSidesMask;
 
 - (id)init {
     self = [super init];
@@ -73,9 +60,9 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.activeFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
-        self.inactiveFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],nil]] autorelease];
-        self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] autorelease];
+        self.activeFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] tl_autorelease];
+        self.inactiveFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],nil]] tl_autorelease];
+        self.clickedFillGradient = [[[NSGradient alloc] initWithColors:[NSArray arrayWithObjects:[NSColor colorWithCalibratedWhite:0.916 alpha:1.0],[NSColor colorWithCalibratedWhite:0.814 alpha:1.0],nil]] tl_autorelease];
         self.fillOption = TLGradientViewActiveGradient;
         self.fillAngle = 270.0;
         
@@ -110,12 +97,12 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_activeFillGradient release];
-    [_inactiveFillGradient release];
-    [_clickedFillGradient release];
-    [_borderColor release];
-    [_highlightColor release];
-    [super dealloc];
+    [_activeFillGradient tl_release];
+    [_inactiveFillGradient tl_release];
+    [_clickedFillGradient tl_release];
+    [_borderColor tl_release];
+    [_highlightColor tl_release];
+    TL_SUPER_DEALLOC();
 }
 
 - (void)viewWillMoveToSuperview:(NSView *)superview {
@@ -137,8 +124,8 @@
 - (void)setClickedFillGradient:(NSGradient *)gradient {
     if (_clickedFillGradient == gradient)
         return;
-    [gradient retain];
-    [_clickedFillGradient release];
+    [gradient tl_retain];
+    [_clickedFillGradient tl_release];
     _clickedFillGradient = gradient;
     [self setNeedsDisplay:YES];
 }
@@ -146,8 +133,8 @@
 - (void)setActiveFillGradient:(NSGradient *)gradient {
     if (_activeFillGradient == gradient)
         return;
-    [gradient retain];
-    [_activeFillGradient release];
+    [gradient tl_retain];
+    [_activeFillGradient tl_release];
     _activeFillGradient = gradient;
     [self setNeedsDisplay:YES];
 }
@@ -155,8 +142,8 @@
 - (void)setInactiveFillGradient:(NSGradient *)gradient {
     if (_inactiveFillGradient == gradient)
         return;
-    [gradient retain];    
-    [_inactiveFillGradient release];
+    [gradient tl_retain];
+    [_inactiveFillGradient tl_release];
     _inactiveFillGradient = gradient;
     [self setNeedsDisplay:YES];
 }
@@ -188,8 +175,8 @@
 - (void)setBorderColor:(NSColor *)color {
     if (_borderColor == color)
         return;
-    [color retain];    
-    [_borderColor release];
+    [color tl_retain];    
+    [_borderColor tl_release];
     _borderColor = color;
     [self setNeedsDisplay:YES];
 }

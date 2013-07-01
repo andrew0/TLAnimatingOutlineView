@@ -31,6 +31,7 @@
 // For example, "Contains code from "TLAnimatingOutlineView" by Jonathan Dann http://code.google.com/p/tlanimatingoutlineview/" will do.
 
 #import "TLEmbossedTextFieldCell.h"
+#import "TLAnimatingOutlineView.h"
 
 @interface TLEmbossedTextFieldCell ()
 
@@ -46,7 +47,7 @@
 
 @implementation TLEmbossedTextFieldCell
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView {
-    NSShadow *shadow = [[[NSShadow alloc] init] autorelease];
+    NSShadow *shadow = [[[NSShadow alloc] init] tl_autorelease];
     [shadow setShadowColor:[NSColor colorWithCalibratedWhite:0.96 alpha:1.0]];
     [shadow setShadowBlurRadius:0.0];
     [shadow setShadowOffset:NSMakeSize(0.0, -1.0)];

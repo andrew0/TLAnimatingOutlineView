@@ -32,6 +32,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "TLGeometry.h"
+#import "TLAnimatingOutlineView.h"
 
 enum {
     TLGradientViewActiveGradient = 0,
@@ -40,20 +41,8 @@ enum {
 };
 typedef NSUInteger TLGradientViewFillOption;
 
-@interface TLGradientView : NSView <NSCoding> {
-@private
-    NSGradient *_activeFillGradient;
-    NSGradient *_inactiveFillGradient;
-    NSGradient *_clickedFillGradient;
-    TLGradientViewFillOption _fillOption;
-    CGFloat _fillAngle;
-    BOOL _drawsHighlight;
-    NSColor *_highlightColor;
-    NSColor *_clickedHighLightColor;
-    BOOL _drawsBorder;
-    NSColor *_borderColor;
-    TLRectEdge _borderSidesMask;
-}
+@interface TLGradientView : NSView <NSCoding>
+
 @property(nonatomic,readwrite,copy) NSGradient *activeFillGradient;
 @property(nonatomic,readwrite,copy) NSGradient *inactiveFillGradient;
 @property(nonatomic,readwrite,copy) NSGradient *clickedFillGradient;
@@ -65,4 +54,5 @@ typedef NSUInteger TLGradientViewFillOption;
 @property(nonatomic,readwrite,assign) BOOL drawsBorder;
 @property(nonatomic,readwrite,copy) NSColor *borderColor;
 @property(nonatomic,readwrite,assign) TLRectEdge borderSidesMask;
+
 @end

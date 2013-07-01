@@ -31,21 +31,16 @@
 // For example, "Contains code from "TLAnimatingOutlineView" by Jonathan Dann http://code.google.com/p/tlanimatingoutlineview/" will do.
 
 #import "TLGradientView.h"
+#import "TLAnimatingOutlineView.h"
 
-@interface TLDisclosureBar : TLGradientView <NSCoding>{
- @private
-    NSButton *_disclosureButton;
-    NSImageView *_imageViewLeft;
-    NSTextField *_labelField;
-    NSView *_accessoryView;
-}
+@interface TLDisclosureBar : TLGradientView <NSCoding>
 
-@property(nonatomic,readonly,retain) NSImageView *imageViewLeft;
-@property(nonatomic,readonly,retain) NSButton *disclosureButton;
-@property(nonatomic,readonly,retain) NSTextField *labelField;
+@property(nonatomic,readonly,tl_strong) NSImageView *imageViewLeft;
+@property(nonatomic,readonly,tl_strong) NSButton *disclosureButton;
+@property(nonatomic,readonly,tl_strong) NSTextField *labelField;
 
 // Setting the accessory view will cause the removal of the current one from the view heirarchy. The new view will have its autoresizing mask amended with NSMinXMargin if it isn't set already.
-@property(nonatomic,readwrite,retain) NSView *accessoryView;
+@property(nonatomic,readwrite,tl_strong) NSView *accessoryView;
 @property(nonatomic,readwrite,assign) BOOL hasDisclosureButton;
 
 - (id)initWithFrame:(NSRect)frame expanded:(BOOL)expanded;

@@ -37,10 +37,14 @@
 @end
 
 @interface TLGradientView (Private)
-
+- (void)windowDidChangeFocus:(NSNotification *)notification;
 @end
 
 @implementation TLGradientView (Private)
+
+- (void)windowDidChangeFocus:(NSNotification *)notification {
+    [self setNeedsDisplay:YES];
+}
 
 @end
 
@@ -49,8 +53,8 @@
 - (id)init {
     self = [super init];
     if (self) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(display) name:NSApplicationDidBecomeActiveNotification object:NSApp];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(display) name:NSApplicationDidResignActiveNotification object:NSApp];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidChangeFocus:) name:NSApplicationDidBecomeActiveNotification object:NSApp];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidChangeFocus:) name:NSApplicationDidResignActiveNotification object:NSApp];
     }
     
     return self;
@@ -107,13 +111,13 @@
 
 - (void)viewWillMoveToSuperview:(NSView *)superview {
     [super viewWillMoveToSuperview:superview];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:[self window]];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:[self window]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignMainNotification object:[self window]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:[self window]];
     
     if (!superview) return;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(display) name:NSWindowDidResignKeyNotification object:[superview window]];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(display) name:NSWindowDidBecomeKeyNotification object:[superview window]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidChangeFocus:) name:NSWindowDidResignMainNotification object:[superview window]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidChangeFocus:) name:NSWindowDidBecomeMainNotification object:[superview window]];
 }
 
 - (void)setBorderSidesMask:(TLRectEdge)mask {
@@ -184,7 +188,7 @@
 - (void)drawRect:(NSRect)rect {
     NSGradient *fillGradient = nil;
     if (self.fillOption != TLGradientViewClickedGradient)
-        fillGradient = [[self window] isKeyWindow] ? self.activeFillGradient : self.inactiveFillGradient;
+        fillGradient = [[self window] isKeyWindow] || [[self window] isMainWindow] ? self.activeFillGradient : self.inactiveFillGradient;
     else
         fillGradient = self.clickedFillGradient;
     

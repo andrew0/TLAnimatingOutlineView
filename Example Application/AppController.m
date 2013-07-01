@@ -36,8 +36,7 @@
 #import "TLDisclosureBar.h"
 
 @implementation AppController
-- (void)awakeFromNib;
-{
+- (void)awakeFromNib {
     NSSize contentSize = [_scrollView contentSize];
     TLAnimatingOutlineView *outlineView = [[[TLAnimatingOutlineView alloc] initWithFrame:NSMakeRect(0.0, 0.0, contentSize.width, contentSize.height)] autorelease];
     [outlineView setDelegate:self];
@@ -57,8 +56,7 @@
 //    [self performSelector:@selector(insertionTest) withObject:nil afterDelay:4.0];
 }
 
-- (void)frameTest;
-{
+- (void)frameTest {
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
     NSView *view = [(TLCollapsibleView *)[[outlineView subviews] objectAtIndex:0] detailView];
     NSRect frame = [view frame];
@@ -66,8 +64,7 @@
     [view setFrame:frame];
 }
 
-- (void)insertionTest;
-{
+- (void)insertionTest {
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
     
     NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 700.0, 300.0)] autorelease];
@@ -77,15 +74,13 @@
     [self performSelector:@selector(removalTest) withObject:nil afterDelay:4.0];
 }
 
-- (void)removalTest;
-{
+- (void)removalTest {
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
     [outlineView removeItemAtRow:2 animate:YES];
     [self performSelector:@selector(additionTest) withObject:nil afterDelay:4.0];
 }
 
-- (void)additionTest;
-{
+- (void)additionTest {
     TLAnimatingOutlineView *outlineView = [_scrollView documentView];
     NSView *customView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 700.0, 300.0)] autorelease];
     
@@ -94,8 +89,8 @@
     [self performSelector:@selector(frameTest) withObject:nil afterDelay:4.0];
 }
 
-- (CGFloat)rowSeparation;
-{
-    return 1.0;
+- (CGFloat)rowSeparation {
+    return 0.0;
 }
+
 @end

@@ -188,7 +188,6 @@ NSString *TLAnimatingOutlineViewItemDidCollapseNotification = @"TLAnimatingOutli
     NSViewAnimation *_removalAnimation;
     NSViewAnimation *_expandAnimation;
     NSViewAnimation *_collapseAnimation;
-    BOOL _allowsSingleSubviewExpansion;
 }
 
 @synthesize insertionAnimation = _insertionAnimation;

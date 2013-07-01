@@ -129,7 +129,7 @@ NSString *TLCollapsibleViewDetailViewAnimationInfoKey = @"TLCollapsibleViewDetai
         [self setAutoresizingMask:NSViewWidthSizable];
 
         NSRect disclosureBarFrame = frame;
-        disclosureBarFrame.size.height = 25.0;
+        disclosureBarFrame.size.height = 21.0;
         disclosureBarFrame.origin.y = 0.0;
         self.disclosureBar = [[[TLDisclosureBar alloc] initWithFrame:disclosureBarFrame expanded:expanded] autorelease];
 

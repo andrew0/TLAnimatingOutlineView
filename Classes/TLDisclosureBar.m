@@ -63,6 +63,12 @@
 }
 
 - (void)_adjustSubviewsFollowingResize {
+    NSRect imageViewFrame = [self.imageViewLeft frame];
+    if (!self.imageViewLeft.image) {
+        imageViewFrame.origin.x -= TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
+        imageViewFrame.size = NSZeroSize;
+    }
+    
     NSSize labelSize = [[self.labelField stringValue] sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:[NSFont systemFontSizeForControlSize:[[self.labelField cell] controlSize]]],NSFontAttributeName,nil]];
     CGFloat limitingXCoordinate = self.accessoryView ? NSMinX([self.accessoryView frame]) : NSMaxX([self frame]);
 
@@ -72,7 +78,7 @@
     } else {
         // BUGFIX: even with changing the autoresizing mask, sometimes when the view is resized too quickly we get the classic autoresizing confusion bug so we set the frame of the label field to compensate.
         NSRect labelFieldFrame = [self.labelField frame];
-        labelFieldFrame.origin.x = NSMaxX([self.imageViewLeft frame]) + TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
+        labelFieldFrame.origin.x = NSMaxX(imageViewFrame) + TL_DISCLOSURE_BAR_SUBVIEW_SPACING;
         labelFieldFrame.size.width = limitingXCoordinate - NSMinX(labelFieldFrame);
         [self.labelField setFrame:labelFieldFrame];
         [self.labelField setAutoresizingMask:NSViewWidthSizable];
@@ -211,6 +217,7 @@
 
 - (void)setLeftImage:(NSImage *)image {
     [self.imageViewLeft setImage:image];
+    [self _adjustSubviewsFollowingResize];
 }
 
 - (void)setAccessoryView:(NSView *)accessoryView {

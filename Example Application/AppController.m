@@ -43,7 +43,7 @@
     [outlineView setAutoresizingMask:NSViewWidthSizable]; // should not be combined with NSviewHieghtSizable else we have incorrect scrollbar showing/hiding/sizing behaviour.
     [_scrollView setDocumentView:outlineView];
     
-    id view = [outlineView addView:_detailView1 withImage:[NSImage imageNamed:NSImageNameQuickLookTemplate] label:@"First View"  expanded:YES];
+    id view = [outlineView addView:_detailView1 withImage:nil label:@"First View"  expanded:YES];
 //    TLGradientView *accessoryView = [[[TLGradientView alloc] initWithFrame:NSMakeRect(0.0, 0, 40, 18)] autorelease];
 //    [[view disclosureBar] setAccessoryView:accessoryView];
     

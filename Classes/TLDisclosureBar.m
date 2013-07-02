@@ -170,10 +170,12 @@
 }
 
 - (id)initWithFrame:(NSRect)frame leftImage:(NSImage *)leftImage label:(NSString *)label expanded:(BOOL)expanded {
-    if (![self initWithFrame:frame expanded:expanded])
-        return nil;
-    [self setLeftImage:leftImage];
-    [self setLabel:label];
+    self = [self initWithFrame:frame expanded:expanded];
+    if (self) {
+        [self setLeftImage:leftImage];
+        [self setLabel:label];
+    }
+    
     return self;
 }
 
